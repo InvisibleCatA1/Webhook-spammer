@@ -26,8 +26,17 @@ while True:
 
 count = int(input("How many times to spam? "))
 for i in range(count):
-    requests.post(webhook_url, json={"content": message})
-    print(Fore.GREEN + "Message sent! #" + str(i+1) + Fore.RESET)
+    # jsonData = requests.post(webhook_url, json={"content": message}).json()
+    response = requests.post(webhook_url, data={"content": message})
+
+    if response.status_code == 204:
+        print(Fore.GREEN + "Message sent! #" + str(i+1) + Fore.RESET)
+    elif response.status_code == 400:
+        print(Fore.RED + "Invalid Webhook URL!" + Fore.RESET)
+        exit()
+    else:
+        print(Fore.RED + "Error! #" + str(i+1) + Fore.RESET + ": " + str(response.status_code))
+        exit()
 print(Fore.GREEN + "Done!" + Fore.RESET)
 
 
